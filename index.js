@@ -1,4 +1,4 @@
-const omit = require("omit-deep");
+const omit = require('omit-deep-lodash');
 const pick = require("lodash.pick");
 const mongoose = require("mongoose");
 const { assign } = require("power-assign");
