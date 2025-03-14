@@ -89,13 +89,16 @@ const saveDiffHistory = (queryObject, currentObject, opts, method) => {
 
   const updateParams = Object.assign(
     {},
-    ...Object.keys(update || {}).map((key) => {
-      if (update[key] && typeof update[key] === "object") {
-        return { [key]: update[key] };
-      }
-      return { [key]: update[key] ?? null }; // Ensures null values are explicitly assigned
-    })
+    ...(update && typeof update === "object" 
+      ? Object.keys(update).map((key) => 
+          update[key] && typeof update[key] === "object" 
+            ? { [key]: update[key] } 
+            : { [key]: update[key] ?? {} } // Assign an empty object instead of null/undefined
+        ) 
+      : []
+    )
   );
+  
   // const updateParams = Object.assign(
   //   ...Object.keys(update).map(function(key) {
   //     if (typeof update[key] === "object") {
