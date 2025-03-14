@@ -86,14 +86,24 @@ function saveDiffObject(
 const saveDiffHistory = (queryObject, currentObject, opts, method) => {
   const update = JSON.parse(JSON.stringify(queryObject._update));
   /* eslint-disable security/detect-object-injection */
+
   const updateParams = Object.assign(
-    ...Object.keys(update).map(function(key) {
-      if (typeof update[key] === "object") {
-        return update[key];
+    {},
+    ...Object.keys(update || {}).map((key) => {
+      if (update[key] && typeof update[key] === "object") {
+        return { [key]: update[key] };
       }
-      return update;
+      return { [key]: update[key] ?? null }; // Ensures null values are explicitly assigned
     })
   );
+  // const updateParams = Object.assign(
+  //   ...Object.keys(update).map(function(key) {
+  //     if (typeof update[key] === "object") {
+  //       return update[key];
+  //     }
+  //     return update;
+  //   })
+  // );
   /* eslint-enable security/detect-object-injection */
   delete queryObject._update["$setOnInsert"];
   var set = queryObject._update["$set"];
